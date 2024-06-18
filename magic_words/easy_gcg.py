@@ -234,7 +234,7 @@ def stochastic_easy_gcg_qa_ids(question_ids: list[torch.Tensor],
     for iteration in pbar:
         # Initialize the gradients tensor
         grads_vocab_size = model.model.embed_tokens.weight.shape[0]
-        grads = torch.zeros_like(prompt_ids.unsqueeze(-1)).repeat(1, 1, grads_vocab_size).double()
+        grads = torch.zeros_like(prompt_ids.unsqueeze(-1)).repeat(1, 1, grads_vocab_size).float()
 
         # Compute gradients over batches of question-answer pairs
         print(f"Computing gradients over grad_batch_size={grad_batch_size}")
@@ -378,7 +378,8 @@ def get_prompt_grads(model,
 
     answer_loss = torch.nn.functional.cross_entropy(flat_answer_logits, answer_ids.reshape(-1), reduction='none')
 
-    loss = answer_loss.mean()
+    answer_loss = answer_loss.to(torch.float16)
+    loss = answer_loss.mean().to(torch.float16) # RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')
     loss.backward()
     grads = one_hot_prompt_ids.grad.clone() # [1, num_prompt_tokens, vocab_size]
 

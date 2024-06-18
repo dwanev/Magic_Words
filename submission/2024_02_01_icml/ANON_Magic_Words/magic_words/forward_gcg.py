@@ -124,7 +124,7 @@ def get_prompt_divergence_grads(model, tokenizer, start_prompt, x_0, R_t):
 
     # get the unreached logits 
     reached_logits = [1.0 if i in R_t else 0.0 for i in range(answer_logits.shape[-1])]
-    reached_logits = torch.tensor(reached_logits, dtype=torch.float).to(model.device)
+    reached_logits = torch.tensor(reached_logits, dtype=torch.float16).to(model.device)
     # normalize 
     reached_logits = reached_logits / reached_logits.sum()
     # add a batch dimension

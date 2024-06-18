@@ -62,7 +62,7 @@ def batch_compute_score(message_ids:torch.Tensor,
                                         future_mask=future_mask, 
                                         insertion_point=insertion_point) 
 
-        future_losses.append(msg_scores.to(torch.float32).numpy())
+        future_losses.append(msg_scores.to(torch.float16).numpy())
 
 
         mean_loss += ((end_-start)/num_iters) * avg_loss

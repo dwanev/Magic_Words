@@ -43,6 +43,9 @@ args = parser.parse_args()
 # set the pytorch seed
 torch.manual_seed(args.seed)
 
+device_map = "auto"
+device = "cpu" #torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+
 
 # get model and tokenizer -- tiiuae/falcon-7b
 if args.model == 'falcon-7b':
@@ -56,7 +59,7 @@ if args.model == 'falcon-7b':
         tokenizer=tokenizer,
         torch_dtype=torch.bfloat16,
         trust_remote_code=True,
-        device_map="auto",
+        device_map=device_map,
     )
     model = pipeline.model
     model.eval()
@@ -72,7 +75,7 @@ elif args.model == 'falcon-40b':
         tokenizer=tokenizer,
         torch_dtype=torch.bfloat16,
         trust_remote_code=True,
-        device_map="auto",
+        device_map=device_map,
     )
     model = pipeline.model
     model.eval()
@@ -85,7 +88,7 @@ elif args.model == 'llama-7b':
                                             add_eos_token=False)
     tokenizer.bos_token = ''
     tokenizer.eos_token = ''
-    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto")
+    model = AutoModelForCausalLM.from_pretrained(model_name, device_map=device_map)
     model = model.half() # convert to fp16 for fast inference.
     model.eval()
     print("Done loading model and tokenizer!\n")
@@ -96,7 +99,7 @@ elif args.model == "gpt-2-small":
     # set the pad token as the eos token for the tokenizer 
     tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(model_name)
-    model = model.to('cuda')
+    model = model.to(device)
     model = model.half()
     model.eval()
 else: 

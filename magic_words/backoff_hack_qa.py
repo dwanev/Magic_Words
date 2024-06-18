@@ -65,7 +65,7 @@ def backoff_hack_qa_ids(question_ids:torch.Tensor,
     base_answer_logits = qa_logits[:, -(answer_len+1):-1, :]
     base_answer_pred = base_answer_logits.argmax(-1)
     base_correct = (base_answer_pred == answer_ids).sum().item() == answer_len
-    base_loss = torch.nn.functional.cross_entropy(base_answer_logits.cuda()[0, :, :], 
+    base_loss = torch.nn.functional.cross_entropy(base_answer_logits[0, :, :], # dv this had a .cuda() in it. Is it needed?
                                                   answer_ids[0, :]).item()
     if base_correct: 
         if verbose:
