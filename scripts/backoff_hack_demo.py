@@ -62,6 +62,7 @@ if args.model == 'falcon-7b':
         device_map=device_map,
     )
     model = pipeline.model
+    model = model.half() # convert to fp16 for fast inference. (dv added)
     model.eval()
     print("Done loading model and tokenizer!\n")
 elif args.model == 'falcon-40b':
