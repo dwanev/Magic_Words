@@ -216,7 +216,7 @@ def stochastic_easy_gcg_qa_ids(question_ids: list[torch.Tensor],
 
     # Initialize the prompt
     prompt_ids = instantiate_prompt(model, tokenizer, blacklist, num_tokens)
-    print("Initial prompt: ", tokenizer.decode(prompt_ids[0].tolist()))
+    print("Initial (random) prompt: ", tokenizer.decode(prompt_ids[0].tolist()))
 
     if init_prompt_ids is not None:
         if init_prompt_ids.shape[1] > num_tokens:
